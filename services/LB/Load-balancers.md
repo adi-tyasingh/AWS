@@ -9,16 +9,80 @@ AWS provides **four types of load balancers**:
 3. **Gateway Load Balancer (GWLB)**
 4. **Classic Load Balancer (CLB) [Legacy]**
 
----
+![alt text](./assets/loadbalancer.png)
 
-## **2. Key Benefits of AWS Load Balancing**
+
+## why use Load-balancers? 
+- spread load across multiple downstream instances. 
+- Expose a single access point (DNS) to your application. 
+- Seamlessly handle failure
+- Perform health checks
+- enforce stickiness with cookies
+- Provide SSL (HTTPS) termination for your website.
+- high availability across AZs
+- Seperate public traffic from private traffic.  
+
+
+## Integrations:
+- EC2
+- ECS
+- ASG
+- CloudWatch
+- Route53 
+- WAF
+- Global accelerator
+- ACM 
+
+**Sticky Sessions:** I
+- Same client is directed to the same instance/target behind the backend 
+- Implemented using cookies, cookie has an expiration date.  
+- Ensures that user does not lose session data
+- works with ALB, NLB & CLB
+- Can lead to imbalanced balancing. 
+- Two types of cookies: Application Based (Custom/Application) and Duration Based
+
+**Cross zone load balancing:**
+- Routing packets accross AZs to ensure equal distribution of packets, in case of uneven numbers of EC2 instances in AZs
+- Enabled by default in ALB, No charges for AZ to AZ data transfer.
+- Disables by default in NLB and GWLB, Charges for AZ to AZ data transfer
+- CLB(retired) Disabled, No charges 
+
+**SSL/TLS:**
+- SSL certificate allows traffic between client and LB to be encrypted in transit(In-flight encryption)
+- SSL refers to secure sockets layer
+- TLS refers to Transport layer security 
+- TLS is a newer version and is most commonly used. 
+- SSL certs are issued by Certificate Authority (eg. Digicert, godaddy etc)
+- SSL certificates needed for HTTPS(Green lock icon)
+- Traffic between Client and LB is HTTPS over public internet
+- LB performs SSL certificate termination
+- Load balancer communicates with instance using HTTP(Not encrypted)
+- LB uses X.509 SSL server certificate. 
+- Certificates can be managed using ACM(AWS certificate manager)
+- You can create and upload your own certificates. 
+- If LB is HTTPS listener you must specify:
+    - Default certificate 
+    - Optional List of certificates to support multiple domains
+    - Clients can use SNI to specify hostname they reach 
+    - Set a specific security policy to support older version of SSL/TLS (Legacy Clients)
+
+**SNI:** 
+- Newer protocol to solve the problem of loading multiple Certs onto a single server. 
+- requires client to indicate the hostname, and identifies the correct cert based on hostname 
+- Only works with NLB/ALB 
+- Does not work with CLB 
+
+**Connection Draining / Deregistration Delay:** Provides a short window of time for inflight requests to be processed while
+ an instance is being marked un-healthy. The LB stops sending new requests to the instance but allows inflight requests to
+ be processed, before shutting down the instance completely. Connection draining can be set manualy(1-3600) with a default
+calue of 300s
+
+# **2. Key Benefits of AWS Load Balancing**
 ✅ **High Availability:** Automatically routes traffic to healthy targets.  
 ✅ **Scalability:** Dynamically adjusts to traffic demands.  
 ✅ **Fault Tolerance:** Detects and reroutes requests from unhealthy instances.  
 ✅ **Security:** Works with AWS Web Application Firewall (WAF), SSL/TLS encryption.  
 ✅ **Cost Optimization:** Supports auto-scaling and pay-as-you-go pricing.  
-
----
 
 # **3. Types of AWS Load Balancers**
 | Load Balancer Type | Best For | Layer | Protocols | Features |
@@ -165,4 +229,3 @@ AWS Load Balancers provide **scalable, high-performance traffic distribution** f
 - **GWLB:** Used for **network security and packet inspection** (Layer 3).  
 - **CLB:** Legacy option, best avoided for new deployments.  
 
-Would you like a **hands-on setup guide** for an AWS load balancer? 🚀

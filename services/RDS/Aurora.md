@@ -68,5 +68,9 @@
     - removes burden of modifying application to work with postgres
     - babel fish allows application to communicate with aurora postgres db using T-SQL
     - Migrations using AWS SCT and DMS 
-
- 
+- Aurora Database cloning: 
+    - allows users to create a new rds aurora db from an existing one 
+    - very fast, faster than snapshot and restore 
+    - cost-effective
+    - uses copy on write (New db uses storage allocated to old db, until change is made in either db)
+    - useful when creating a staging db for testing.
